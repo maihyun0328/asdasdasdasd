@@ -12,19 +12,17 @@ concurrency:
 jobs:
   run:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 35
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-          # 중요: 여기 cache: "pip" 절대 넣지 말 것
 
-      - name: Cache pip download files
+      # requirements.txt 없이 pip 다운로드 캐시
+      - name: Cache pip
         uses: actions/cache@v4
         with:
           path: ~/.cache/pip
@@ -35,8 +33,12 @@ jobs:
           python -m pip install --upgrade pip
           pip install google-api-python-client google-auth google-auth-oauthlib
 
-      - name: Run bot
+      - name: Run bot every 5 minutes (6 times)
         env:
           YT_TOKEN_JSON: ${{ secrets.YT_TOKEN_JSON }}
         run: |
-          python app.py
+          for i in 1 2 3 4 5 6; do
+            echo "===== tick $i ====="
+            python app.py
+            sleep 300
+          done
