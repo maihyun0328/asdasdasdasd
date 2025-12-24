@@ -15,15 +15,22 @@ jobs:
     timeout-minutes: 5
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-          cache: "pip"
+          # 중요: 여기 cache: "pip" 절대 넣지 말 것
 
-      - name: Install dependencies (cached)
+      - name: Cache pip download files
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: pipcache-py311-googleapi-v1
+
+      - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install google-api-python-client google-auth google-auth-oauthlib
