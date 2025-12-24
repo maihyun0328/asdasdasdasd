@@ -5,9 +5,8 @@ from datetime import datetime, timedelta, timezone
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
 
-# ===== 설정 =====
-TARGET_WORD = "원고"   # 이 단어가 제목에 있으면 삭제
-CHECK_MINUTES = 360    # 최근 6시간 영상만 검사 (원하면 조절)
+TARGET_WORD = "원고"
+CHECK_MINUTES = 180   # 최근 3시간만 검사 (빠름)
 
 SCOPES = ["https://www.googleapis.com/auth/youtube.force-ssl"]
 
@@ -33,15 +32,12 @@ def main():
         forMine=True,
         type="video",
         order="date",
-        maxResults=25
+        maxResults=10
     ).execute()
-
-    deleted = 0
 
     for item in res.get("items", []):
         video_id = item["id"]["videoId"]
         snippet = item["snippet"]
-
         title = snippet.get("title", "")
         published_at = snippet.get("publishedAt", "")
 
@@ -50,10 +46,7 @@ def main():
 
         if TARGET_WORD in title:
             youtube.videos().delete(id=video_id).execute()
-            print(f"[DELETED] {title} ({video_id})")
-            deleted += 1
-
-    print(f"Finished. deleted={deleted}")
+            print(f"[DELETED] {title}")
 
 if __name__ == "__main__":
     main()
