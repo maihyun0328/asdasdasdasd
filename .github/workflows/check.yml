@@ -12,7 +12,7 @@ concurrency:
 jobs:
   run:
     runs-on: ubuntu-latest
-    timeout-minutes: 35
+    timeout-minutes: 70
 
     steps:
       - uses: actions/checkout@v4
@@ -21,7 +21,6 @@ jobs:
         with:
           python-version: "3.11"
 
-      # requirements.txt 없이 pip 다운로드 캐시
       - name: Cache pip
         uses: actions/cache@v4
         with:
@@ -33,11 +32,11 @@ jobs:
           python -m pip install --upgrade pip
           pip install google-api-python-client google-auth google-auth-oauthlib
 
-      - name: Run bot every 5 minutes (6 times)
+      - name: Run bot every 5 minutes (12 times = 60 min)
         env:
           YT_TOKEN_JSON: ${{ secrets.YT_TOKEN_JSON }}
         run: |
-          for i in 1 2 3 4 5 6; do
+          for i in 1 2 3 4 5 6 7 8 9 10 11 12; do
             echo "===== tick $i ====="
             python app.py
             sleep 300
