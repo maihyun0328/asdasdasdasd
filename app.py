@@ -6,7 +6,7 @@ from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
 
 TARGET_WORD = "원고"
-CHECK_MINUTES = 180   # 최근 3시간만 검사 (빠름)
+CHECK_MINUTES = 360   # 최근 6시간만 검사 (빠름)
 
 SCOPES = ["https://www.googleapis.com/auth/youtube.force-ssl"]
 
